@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	
+
+	<constant name="struts.devMode" value="true" />
+	
+	<package name="basicstruts2" extends="struts-default">
+	
+		<interceptors>
+			<interceptor name="bosLoginInterceptor" 
+			class="com.newbie.bos.web.interceptor.BOSLoginInterceptor">
+				<!-- 指定哪些方法不被拦截-->
+				<param name="excludeMethods">login</param>
+			</interceptor>
+			<!-- 定义拦截器栈 -->
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="bosLoginInterceptor"/>
+				<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+		</interceptors>
+		<!-- 指定默认的拦截器栈-->
+		<default-interceptor-ref name="myStack"/>
+		
+		<!-- 指定全局的结果集 -->
+		<global-results>
+			<result name="login">/login.jsp</result>
+		</global-results>
+	
+		<!-- 需要进行权限控制的页面访问 -->
+		<action name="page_*_*">
+			<result type="dispatcher">/WEB-INF/pages/{1}/{2}.jsp</result>
+		</action>
+		<!-- 用户管理 -->
+		<action name="userAction_*" class="userAction" method="{1}">
+			<result name="home">/index.jsp</result>
+			<result name="login">/login.jsp</result>
+		</action>
+		
+		<!-- 取派员设置数据 -->
+		<action name="staffAction_*" class="staffAction" method="{1}">
+			<result name="list">/WEB-INF/pages/base/staff.jsp</result>
+		</action>
+		
+	</package>
+</struts>
