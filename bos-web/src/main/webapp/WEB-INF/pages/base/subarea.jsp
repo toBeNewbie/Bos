@@ -160,7 +160,7 @@
 			pageList: [30,50,100],
 			pagination : true,
 			toolbar : toolbar,
-			url : "json/subarea.json",
+			url : "subareaAction_pageQuery.action",
 			idField : 'id',
 			columns : columns,
 			onDblClickRow : doDblClickRow
@@ -206,7 +206,8 @@
 	<div class="easyui-window" title="分区添加修改" id="addSubareaWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
 		<div style="height:31px;overflow:hidden;" split="false" border="false" >
 			<div class="datagrid-toolbar">
-				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true" >保存</a>
+				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton"
+					plain="true">保存</a>
 				<script type="text/javascript">
 					$(function(){
 						$("#save").click(function(){

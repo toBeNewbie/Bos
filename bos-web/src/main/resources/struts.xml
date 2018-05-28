@@ -48,5 +48,8 @@
 		<action name="regionAction_*" class="regionAction" method="{1}">
 		</action>
 		
+		<!-- 分区管理  -->
+		<action name="subareaAction_*" class="subareaAction" method="{1}">
+		</action>
 	</package>
 </struts>

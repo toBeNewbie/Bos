@@ -86,6 +86,30 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 	
 	
 	/**
+	 * 将java对象转换为json数据串
+	 * 并返回到页面
+	 * @param object
+	 * @param excludes  排除不想要被转为json的键值域
+	 */
+	public void java2Json(List objects,String[] excludes){
+		//使用json-lib工具，将pageBean对象写回页面
+		//JSONObject---将单一对象转为json
+		//JSONArray----将数组或者集合对象转为json
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.setExcludes(excludes);
+		String json = JSONArray.fromObject(objects, jsonConfig).toString();
+			
+		ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
+		try {
+			ServletActionContext.getResponse().getWriter().print(json);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
 	 * 注入page
 	 * @param page属性（当前的页码数）和rows（当前页面要显示的记录数）属性
 	 */
