@@ -24,7 +24,6 @@ public class StaffService implements IStaffService {
 	
 	@Override
 	public void pageQuery(PageBean pageBean) {
-		// TODO Auto-generated method stub
 		staffDao.pageQuery(pageBean);
 	}
 

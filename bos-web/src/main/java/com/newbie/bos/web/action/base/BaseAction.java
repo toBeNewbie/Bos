@@ -5,9 +5,11 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.apache.commons.lang.ObjectUtils.Null;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 
+import com.newbie.bos.utils.PageBean;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -22,9 +24,13 @@ import net.sf.json.JsonConfig;
  */
 public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 
-	
+	//视图结果集
 	public static final String HOME = "home";
 	public static final String LIST = "list";
+	
+	//分装查询分页数据
+	public PageBean pageBean = new PageBean();
+	DetachedCriteria detachedCriteria = null;
 	
 	//模型对象
 	protected T model;
@@ -34,10 +40,17 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 	
 	//在构造方法中动态获取实体类型，通过反射创建model对象
 	public BaseAction() {
+		//获取注解上的类s
 		ParameterizedType genericSuperclass = (ParameterizedType) this.getClass().getGenericSuperclass();
+		
 		//获得BaseAction上声明的泛型数组
 		Type[] actualTypeArguments = genericSuperclass.getActualTypeArguments();
 		Class<T> entityClass = (Class<T>) actualTypeArguments[0];
+		
+		//设置    创建    离线查询对象
+		detachedCriteria = DetachedCriteria.forClass(entityClass);
+		pageBean.setDetachedCriteria(detachedCriteria);
+		
 		//通过反射创建对象
 		try {
 			model = entityClass.newInstance();
@@ -47,4 +60,40 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 将java对象转换为json数据串
+	 * 并返回到页面
+	 * @param object
+	 * @param excludes  排除不想要被转为json的键值域
+	 */
+	public void java2Json(Object object,String[] excludes){
+		//使用json-lib工具，将pageBean对象写回页面
+		//JSONObject---将单一对象转为json
+		//JSONArray----将数组或者集合对象转为json
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.setExcludes(excludes);
+		JSONObject json = JSONObject.fromObject(object, jsonConfig);
+			
+		ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
+		try {
+			ServletActionContext.getResponse().getWriter().print(json);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * 注入page
+	 * @param page属性（当前的页码数）和rows（当前页面要显示的记录数）属性
+	 */
+	public void setPage(String page) {
+		pageBean.setCurrentPage(page);
+	}
+	public void setRows(String rows) {
+		pageBean.setPageSize(rows);
+	}
+
 }
