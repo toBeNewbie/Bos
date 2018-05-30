@@ -127,28 +127,28 @@
 		width : 120,
 		align : 'center'
 	}, {
-		field : 'staff.name',
+		field : 'bcStaff.name',
 		title : '负责人',
 		width : 120,
 		align : 'center',
 		formatter : function(data,row ,index){
-			return row.staff.name;
+			return row.bcStaff.name;
 		}
 	}, {
-		field : 'staff.telephone',
+		field : 'bcStaff.telephone',
 		title : '联系电话',
 		width : 120,
 		align : 'center',
 		formatter : function(data,row ,index){
-			return row.staff.telephone;
+			return row.bcStaff.telephone;
 		}
 	}, {
-		field : 'staff.station',
+		field : 'bcStaff.station',
 		title : '所属公司',
 		width : 120,
 		align : 'center',
 		formatter : function(data,row ,index){
-			return row.staff.station;
+			return row.bcStaff.station;
 		}
 	} ] ];
 	
@@ -166,7 +166,7 @@
 			pageList: [30,50,100],
 			pagination : true,
 			toolbar : toolbar,
-			url : "json/decidedzone.json",
+			url : "decidedzoneAction_pageQuery.action",
 			idField : 'id',
 			columns : columns,
 			onDblClickRow : doDblClickRow
@@ -199,14 +199,13 @@
 		
 	});
 
-	function doDblClickRow(){
-		alert("双击表格数据...");
+	function doDblClickRow(rowIndex,rowData){
 		$('#association_subarea').datagrid( {
 			fit : true,
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "json/association_subarea.json",
+			url : "subareaAction_findLisByDeciedezoneId.action?deciededzoneId="+rowData.id,
 			columns : [ [{
 				field : 'id',
 				title : '分拣编号',
@@ -225,7 +224,7 @@
 				title : '市',
 				width : 120,
 				align : 'center',
-				formatter : function(data,row ,index){
+				formatter : function(data,row,index){
 					return row.region.city;
 				}
 			}, {
@@ -233,7 +232,7 @@
 				title : '区',
 				width : 120,
 				align : 'center',
-				formatter : function(data,row ,index){
+				formatter : function(data,row,index){
 					return row.region.district;
 				}
 			}, {
@@ -263,12 +262,13 @@
 				align : 'center'
 			} ] ]
 		});
+		
 		$('#association_customer').datagrid( {
 			fit : true,
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "json/association_customer.json",
+			url : "decidedzoneAction_findListHasAssociation.action?id="+rowData.id,
 			columns : [[{
 				field : 'id',
 				title : '客户编号',
