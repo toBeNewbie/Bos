@@ -59,7 +59,7 @@
 				  width : 200
 			  },  
 			  {
-				  field : 'generateMenu',
+				  field : 'generatemenu',
 				  title : '是否生成菜单',
 				  width : 200
 			  },  
