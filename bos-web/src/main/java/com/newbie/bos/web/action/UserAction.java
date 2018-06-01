@@ -3,6 +3,10 @@ package com.newbie.bos.web.action;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import com.newbie.bos.domain.User;
 import com.newbie.bos.service.IUserService;
 import com.newbie.bos.utils.BOSUtils;
+import com.newbie.bos.utils.MD5Utils;
 import com.newbie.bos.web.action.base.BaseAction;
 
 
@@ -27,7 +32,7 @@ public class UserAction extends BaseAction<User> {
 	private IUserService userService;
 	
 	/**
-	 * 用户登录
+	 * 用户登录  使用shiro框架提供的方法进行认证
 	 */
 	public String login(){
 		//从Session中获取生成的验证码
@@ -35,17 +40,20 @@ public class UserAction extends BaseAction<User> {
 		//校验验证码是否输入正确
 		if(StringUtils.isNotBlank(checkcode) && checkcode.equals(validatecode)){
 			//输入的验证码正确
-			User user = userService.login(model);
-			if(user != null){
-				//登录成功,将user对象放入session，跳转到首页
+			//使用shiro提供的方法进行认证
+			Subject subject = SecurityUtils.getSubject();//获得当前用户登录对象，现在状态为“未认证”
+			//用户密码令牌
+			UsernamePasswordToken token = new UsernamePasswordToken(model.getUsername(), MD5Utils.md5(model.getPassword()));
+			try {
+				subject.login(token);;
+				User user = (User) subject.getPrincipal();
 				ServletActionContext.getRequest().getSession().setAttribute("loginUser", user);
-				return HOME;
-			}else{
-				//登录失败，,设置提示信息，跳转到登录页面
-				//输入的验证码错误,设置提示信息，跳转到登录页面
-				this.addActionError("用户名或者密码输入错误！");
+			} catch (AuthenticationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 				return LOGIN;
 			}
+			return HOME;
 		}else{
 			//输入的验证码错误,设置提示信息，跳转到登录页面
 			this.addActionError("输入的验证码错误！");

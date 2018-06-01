@@ -69,5 +69,36 @@
 	<jaxws:client id="crmClient" 
 		serviceClass="com.newbie.bos.crm.ICustomerService" 
 		address="http://192.168.1.101:8080/crm/service/customer"/>
+		
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="loginRealm"></property>
+	</bean>
+	
+	<!-- 注册自定义的realm -->
+	<bean name="loginRealm" class="com.newbie.bos.web.realm.BOSRealm"></bean>
+		
+	<!-- 配置shiro框架的过滤器工厂bean -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager"/>
+		<property name="loginUrl" value="/login.jsp"/>
+		<property name="successUrl" value="index.jsp"/>
+		<property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+		<!-- 指定URL级别拦截策略 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/css/**=anon
+				/js/**=anon
+				/images/**=anon
+				/login.jsp*=anon
+				/validatecode.jsp*=anon
+				/userAction_login.action=anon
+				/functionAction_listajax.action=anon
+				/page_base_staff.action=anon
+				/*=authc
+			</value>
+		</property>
+	</bean>
+	
 	
 </beans>

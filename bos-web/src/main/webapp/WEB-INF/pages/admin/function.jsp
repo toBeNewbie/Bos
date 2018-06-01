@@ -39,7 +39,9 @@
 					}
 				}           
 			],
-			url : '',
+			url : 'functionAction_pageQuery.action',
+			pagination:true,
+			fit:true,
 			columns : [[
 			  {
 				  field : 'id',

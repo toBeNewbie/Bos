@@ -51,7 +51,7 @@
 		</div>
 	</div>
 	<div region="center" style="overflow:auto;padding:5px;" border="false">
-		<form id="noticebillForm" action="" method="post">
+		<form id="noticebillForm" action="noticebillAction_add.action" method="post">
 			<table class="table-edit" width="95%" align="center">
 				<tr class="title">
 					<td colspan="4">客户信息</td>
@@ -60,6 +60,36 @@
 					<td>来电号码:</td>
 					<td><input type="text" class="easyui-validatebox" name="telephone"
 						required="true" /></td>
+						<!-- 为手机号绑定离焦事件 -->
+						<script type="text/javascript">
+							$(function(){
+								//页面加载完成后，为手机号输入框绑定离焦事件。
+								$("input[name='telephone']").blur(function(){
+									//获取手机输入框的值
+									var tel = this.value;
+									//发送ajax请求，请求Action，在Action中远程掉调用crm服务，
+									//获取客户信息，用于页面回显
+									$.post("noticebillAction_findCustomerByTelephone.action",
+											{"telephone":tel},
+											function(data){
+										if(data!=null){
+											//查询到了客户信息，进行回显
+											var cutomerId=data.id;
+											var customerName=data.name;
+											var address=data.address;
+											$("input[name='customerId']").val(cutomerId);
+											$("input[name='customerName']").val(customerName);
+											$("input[name='pickaddress']").val(address);
+										}else{
+											//没有查询到客户信息，显示为""
+											$("input[name='customerId']").val("");
+											$("input[name='customerName']").val("");
+											$("input[name='pickaddress']").val("");
+										}
+									},"json");
+								});
+							});
+						</script>
 					<td>客户编号:</td>
 					<td><input type="text" class="easyui-validatebox"  name="customerId"
 						required="true" /></td>
