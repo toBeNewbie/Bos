@@ -82,8 +82,20 @@
 					<tr>
 						<td>父功能点</td>
 						<td>
-							<input name="function.id" class="easyui-combobox" data-options="valueField:'id',textField:'name',url:'functionAction_listajax.action'"/>
+							 <!-- <input name="function.id" class="easyui-combotree" 
+								data-options="valueField:'id',textField:'name',
+								url:'functionAction_listajax.action'"/> -->
+							<input name="function.id">
+							<script type="text/javascript">
+							$(function(){
+								$("input[name='function.id']").combotree({    
+	    							url:'functionAction_listajax.action', 
+								    required:true,
+								});  
+							});
+							</script>
 						</td>
+						
 					</tr>
 					<tr>
 						<td>描述</td>

@@ -3,12 +3,18 @@ package com.newbie.bos.web.action.base;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.ObjectUtils.Null;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 
+import com.newbie.bos.domain.Function;
+import com.newbie.bos.model.ComboTreeModel;
+import com.newbie.bos.utils.CombotreeDataFormaterUtils;
 import com.newbie.bos.utils.PageBean;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
@@ -34,6 +40,10 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 	
 	//模型对象
 	protected T model;
+	
+	private String listJson;
+	
+	
 	public T getModel() {
 		return model;
 	}
@@ -95,18 +105,30 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 		//使用json-lib工具，将pageBean对象写回页面
 		//JSONObject---将单一对象转为json
 		//JSONArray----将数组或者集合对象转为json
-		JsonConfig jsonConfig = new JsonConfig();
-		jsonConfig.setExcludes(excludes);
-		String json = JSONArray.fromObject(objects, jsonConfig).toString();
-			
+		Object model = objects.get(0);
+		if (model instanceof Function ) {
+			List<ComboTreeModel> comboTreeModels = new ArrayList<>();
+			List<Function> functions = objects;
+			CombotreeDataFormaterUtils.modelFormatCombotree(comboTreeModels, functions);
+			JsonConfig jsonConfig = new JsonConfig();
+			jsonConfig.setExcludes(excludes);
+			listJson = JSONArray.fromObject(comboTreeModels, jsonConfig).toString();
+		}else {
+			JsonConfig jsonConfig = new JsonConfig();
+			jsonConfig.setExcludes(excludes);
+			listJson = JSONArray.fromObject(objects, jsonConfig).toString();
+		}
 		ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
 		try {
-			ServletActionContext.getResponse().getWriter().print(json);
+			ServletActionContext.getResponse().getWriter().print(listJson);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
 	
 	
 	/**
