@@ -47,10 +47,12 @@
 					}
 				}           
 			],
-			url : '',
+			url : 'roleAction_pageQuery.action',
+			pagination:true,
+			fit:true,
 			columns : [[
 				{
-					field : 'id',
+					field : 'code',
 					title : '编号',
 					width : 200
 				},
@@ -65,6 +67,7 @@
 					width : 200
 				} 
 			]]
+		
 		});
 	});
 </script>	

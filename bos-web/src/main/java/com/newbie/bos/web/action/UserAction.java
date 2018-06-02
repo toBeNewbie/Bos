@@ -1,7 +1,6 @@
 package com.newbie.bos.web.action;
 
 import java.io.IOException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -11,7 +10,6 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
 import com.newbie.bos.domain.User;
 import com.newbie.bos.service.IUserService;
 import com.newbie.bos.utils.BOSUtils;
@@ -24,6 +22,9 @@ import com.newbie.bos.web.action.base.BaseAction;
 public class UserAction extends BaseAction<User> {
 	//属性驱动，接收页面输入的验证码
 	private String checkcode;
+	//属性驱动，接收roleIds
+	private String[] roleIds;
+	
 	public void setCheckcode(String checkcode) {
 		this.checkcode = checkcode;
 	}
@@ -85,6 +86,29 @@ public class UserAction extends BaseAction<User> {
 		//销毁session用户数据
 		BOSUtils.getSession().invalidate();
 		return LOGIN;
+	}
+	
+	/**
+	 * 添加用户
+	 * @return
+	 */
+	public String add(){
+		userService.save(model,roleIds);
+		return LIST;
+	}
+	
+	/**
+	 * 显示分页
+	 * @param roleIds
+	 */
+	public String pageQuery(){
+		userService.pageQuery(pageBean);
+		java2Json(pageBean, new String[]{"currentPage","detachedCriteria","pageSize","noticebills","roles"});
+		return NONE;
+	}
+
+	public void setRoleIds(String[] roleIds) {
+		this.roleIds = roleIds;
 	}
 	
 }

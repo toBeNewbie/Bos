@@ -14,8 +14,10 @@ import org.hibernate.criterion.DetachedCriteria;
 
 import com.newbie.bos.domain.Function;
 import com.newbie.bos.model.ComboTreeModel;
+import com.newbie.bos.model.ZTreeModel;
 import com.newbie.bos.utils.CombotreeDataFormaterUtils;
 import com.newbie.bos.utils.PageBean;
+import com.newbie.bos.utils.ZTreeDataFormaterUtils;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -42,6 +44,8 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 	protected T model;
 	
 	private String listJson;
+	
+	private String tag;
 	
 	
 	public T getModel() {
@@ -106,13 +110,21 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 		//JSONObject---将单一对象转为json
 		//JSONArray----将数组或者集合对象转为json
 		Object model = objects.get(0);
+		List<Function> functions = objects;
 		if (model instanceof Function ) {
-			List<ComboTreeModel> comboTreeModels = new ArrayList<>();
-			List<Function> functions = objects;
-			CombotreeDataFormaterUtils.modelFormatCombotree(comboTreeModels, functions);
-			JsonConfig jsonConfig = new JsonConfig();
-			jsonConfig.setExcludes(excludes);
-			listJson = JSONArray.fromObject(comboTreeModels, jsonConfig).toString();
+			if ("1".equals(tag)) {
+				List<ZTreeModel> ZTreeModels = new ArrayList<>();
+				ZTreeDataFormaterUtils.modelFormatCombotree(ZTreeModels, functions);
+				JsonConfig jsonConfig = new JsonConfig();
+				jsonConfig.setExcludes(excludes);
+				listJson = JSONArray.fromObject(ZTreeModels, jsonConfig).toString();
+			}else {
+				List<ComboTreeModel> comboTreeModels = new ArrayList<>();
+				CombotreeDataFormaterUtils.modelFormatCombotree(comboTreeModels, functions);
+				JsonConfig jsonConfig = new JsonConfig();
+				jsonConfig.setExcludes(excludes);
+				listJson = JSONArray.fromObject(comboTreeModels, jsonConfig).toString();
+			}
 		}else {
 			JsonConfig jsonConfig = new JsonConfig();
 			jsonConfig.setExcludes(excludes);
@@ -140,6 +152,14 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 	}
 	public void setRows(String rows) {
 		pageBean.setPageSize(rows);
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 }

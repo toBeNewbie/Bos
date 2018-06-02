@@ -1,20 +1,14 @@
 package com.newbie.bos.web.action;
 
-import java.io.IOException;
 
-import org.apache.struts2.ServletActionContext;
-import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.newbie.bos.domain.Staff;
 import com.newbie.bos.service.IStaffService;
-import com.newbie.bos.utils.PageBean;
 import com.newbie.bos.web.action.base.BaseAction;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 
 @Controller
 @Scope("prototype")

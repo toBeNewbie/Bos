@@ -37,6 +37,7 @@
 		<action name="userAction_*" class="userAction" method="{1}">
 			<result name="home">/index.jsp</result>
 			<result name="login">/login.jsp</result>
+			<result name="list">/WEB-INF/pages/admin/userlist.jsp</result>
 		</action>
 		
 		<!-- 取派员设置数据 -->
@@ -65,6 +66,11 @@
 		<!-- 权限管理 -->
 		<action name="functionAction_*" class="functionAction" method="{1}">
 			<result name="list">/WEB-INF/pages/admin/function.jsp</result>
+		</action>
+		
+		<!-- 角色管理 -->
+		<action name="roleAction_*" class="roleAction" method="{1}">
+			<result name="list">/WEB-INF/pages/admin/role.jsp</result>
 		</action>
 	</package>
 </struts>

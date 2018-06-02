@@ -51,7 +51,7 @@
 		};
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/functionAction_listajax.action',
+			url :"functionAction_listajax.action?tag=1",
 			type : 'POST',
 			dataType : 'json',
 			success : function(data) {
@@ -62,11 +62,26 @@
 			}
 		});
 		
-		
-		
 		// 点击保存
 		$('#save').click(function(){
-			location.href='${pageContext.request.contextPath}/page_admin_privilege.action';
+			//表单校验
+			var v = $("#roleForm").form("validate");
+			if(v){
+				//根据ztree的id获得ztree对象 
+				var treeObj = $.fn.zTree.getZTreeObj("functionTree");
+				//获取ztree上选中的节点
+				var nodes = treeObj.getCheckedNodes(true);
+				var array = new Array();
+				for(var i=0;i<nodes.length;i++){
+					var id = nodes[i].id;
+					array.push(id);
+				}
+				
+				var functionIds = array.join(",");
+				//为隐藏域赋值，（权限的id拼接成的字符串）
+				$("input[name='functionIds']").val(functionIds);
+				$("#roleForm").submit();
+			}
 		});
 	});
 </script>	
@@ -74,19 +89,20 @@
 <body class="easyui-layout">
 		<div region="north" style="height:31px;overflow:hidden;" split="false" border="false" >
 			<div class="datagrid-toolbar">
-				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true" >保存</a>
+				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true" >保存数据</a>
 			</div>
 		</div>
 		<div region="center" style="overflow:auto;padding:5px;" border="false">
-			<form id="roleForm" method="post">
+			<form id="roleForm" method="post" action="roleAction_add.action">
+				<input type="hidden" name="functionIds">
 				<table class="table-edit" width="80%" align="center">
 					<tr class="title">
 						<td colspan="2">角色信息</td>
 					</tr>
 					<tr>
-						<td width="200">编号</td>
+						<td width="200">关键字</td>
 						<td>
-							<input type="text" name="id" class="easyui-validatebox" data-options="required:true" />						
+							<input type="text" name="code" class="easyui-validatebox" data-options="required:true" />						
 						</td>
 					</tr>
 					<tr>
