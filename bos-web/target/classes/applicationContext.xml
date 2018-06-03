@@ -73,6 +73,14 @@
 	<!-- 安全管理器 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="loginRealm"></property>
+		<!-- 注入缓存管理器-->
+		<property name="cacheManager" ref="cacheManager"/>
+	</bean>
+	
+	<!-- 注册缓存管理器 -->
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<!-- 注册ehcache的配置文件 -->
+		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
 	</bean>
 	
 	<!-- 注册自定义的realm -->
@@ -99,6 +107,7 @@
 			</value>
 		</property>
 	</bean>
+	
 	
 	
 </beans>

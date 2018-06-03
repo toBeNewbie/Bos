@@ -118,7 +118,11 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 				JsonConfig jsonConfig = new JsonConfig();
 				jsonConfig.setExcludes(excludes);
 				listJson = JSONArray.fromObject(ZTreeModels, jsonConfig).toString();
-			}else {
+			}else if ("2".equals(tag)) {
+				JsonConfig jsonConfig = new JsonConfig();
+				jsonConfig.setExcludes(excludes);
+				listJson = JSONArray.fromObject(objects, jsonConfig).toString();
+			} else {
 				List<ComboTreeModel> comboTreeModels = new ArrayList<>();
 				CombotreeDataFormaterUtils.modelFormatCombotree(comboTreeModels, functions);
 				JsonConfig jsonConfig = new JsonConfig();
